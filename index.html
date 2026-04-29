@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NETFLIX — Watch Anywhere</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red: #E50914;
+  --red-hover: #f40612;
+  --dark: #141414;
+  --black: #000;
+  --white: #fff;
+  --gray: #808080;
+  --card-bg: #2F2F2F;
+  --nav-height: 68px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--dark);
+  color: var(--white);
+  font-family: 'DM Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── NAVBAR ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  height: var(--nav-height);
+  padding: 0 4%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%);
+  transition: background 0.3s;
+}
+
+nav.scrolled { background: var(--black); }
+
+.nav-left { display: flex; align-items: center; gap: 32px; }
+
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px;
+  letter-spacing: 3px;
+  color: var(--red);
+  text-decoration: none;
+  line-height: 1;
+}
+
+.logo em { color: #fff; font-style: normal; }
+
+.nav-links { display: flex; gap: 18px; list-style: none; }
+.nav-links a {
+  font-size: 13px;
+  color: #e5e5e5;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+
+.nav-right { display: flex; align-items: center; gap: 20px; }
+
+.nav-search, .nav-bell {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.nav-avatar {
+  width: 32px; height: 32px;
+  border-radius: 4px;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-bg-mosaic {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 3px;
+  transform: perspective(800px) rotateX(8deg) scale(1.15);
+  transform-origin: center bottom;
+  opacity: 0.55;
+}
+
+.mosaic-cell {
+  overflow: hidden;
+  position: relative;
+}
+
+.mosaic-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.mosaic-cell.placeholder {
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  opacity: 0.6;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: -5%;
+  right: -5%;
+  height: 120px;
+  background: var(--dark);
+  border-radius: 50% 50% 0 0 / 80px 80px 0 0;
+  z-index: 2;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.75) 80%, rgba(20,20,20,1) 100%),
+    linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 60%);
+  z-index: 1;
+}
+
+.hero-arc {
+  position: absolute;
+  bottom: 95px;
+  left: -5%;
+  right: -5%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent 5%, var(--red) 30%, var(--red) 70%, transparent 95%);
+  border-radius: 50%;
+  z-index: 3;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 4;
+  text-align: center;
+  padding: 0 20px;
+  max-width: 700px;
+}
+
+.hero-content h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(44px, 7vw, 76px);
+  letter-spacing: 2px;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+
+.hero-content h1 span { color: var(--red); }
+
+.hero-content p {
+  font-size: clamp(14px, 2vw, 18px);
+  color: #e5e5e5;
+  font-weight: 400;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+.hero-email-form {
+  display: flex;
+  gap: 0;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.hero-email-form input {
+  flex: 1;
+  height: 56px;
+  padding: 0 20px;
+  font-size: 15px;
+  background: rgba(22,22,22,0.7);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-right: none;
+  color: white;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.hero-email-form input::placeholder { color: #aaa; }
+.hero-email-form input:focus { border-color: white; }
+
+.hero-email-form button {
+  height: 56px;
+  padding: 0 28px;
+  background: var(--red);
+  border: none;
+  color: white;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-email-form button:hover { background: var(--red-hover); }
+.hero-email-form button svg { width: 18px; height: 18px; }
+
+/* ── SECTIONS ── */
+.section { padding: 40px 4% 20px; }
+.section + .section { padding-top: 12px; }
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: 0.3px;
+}
+
+/* ── STANDARD CARD ROW ── */
+.card-row-wrap { position: relative; }
+
+.card-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  overflow: hidden;
+}
+
+.movie-card {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, z-index 0s 0.3s;
+  aspect-ratio: 2/3;
+}
+
+.movie-card:hover {
+  transform: scale(1.08) translateY(-6px);
+  z-index: 10;
+  transition: transform 0.3s ease, z-index 0s;
+  box-shadow: 0 14px 36px rgba(0,0,0,0.7);
+}
+
+.movie-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.movie-card .card-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg, #1e1e1e 0%, #2a1212 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+.movie-card .card-fallback span { font-size: 40px; }
+
+.card-hover-info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
+  padding: 28px 10px 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.movie-card:hover .card-hover-info { opacity: 1; }
+
+.card-hover-info .card-title {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-hover-info .card-meta {
+  font-size: 10px;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card-hover-info .card-meta .match { color: #46d369; font-weight: 700; }
+
+.card-play-btn {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 30px; height: 30px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+  border: 1.5px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.movie-card:hover .card-play-btn { opacity: 1; }
+
+.n-badge {
+  position: absolute;
+  top: 6px; left: 6px;
+  width: 18px;
+}
+
+/* ── TOP 10 ROW ── */
+.top10-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+}
+
+.top10-card {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s;
+  display: flex;
+  align-items: stretch;
+}
+
+.top10-card:hover { transform: scale(1.06) translateY(-6px); z-index: 10; }
+
+.top10-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(80px, 9vw, 140px);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 3px rgba(255,255,255,0.18);
+  align-self: flex-end;
+  padding-bottom: 10px;
+  margin-right: -20px;
+  z-index: 2;
+  min-width: 70px;
+  text-align: right;
+  flex-shrink: 0;
+  transition: -webkit-text-stroke 0.3s;
+}
+
+.top10-card:hover .top10-num { -webkit-text-stroke: 3px rgba(229,9,20,0.7); }
+
+.top10-poster {
+  flex: 1;
+  aspect-ratio: 2/3;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: -6px 0 20px rgba(0,0,0,0.5);
+}
+
+.top10-poster img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+}
+
+.top10-poster .card-fallback {
+  width: 100%; height: 100%;
+  background: linear-gradient(160deg, #1e1e1e, #2a1212);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px; font-size: 11px; color: #777;
+}
+.top10-poster .card-fallback span { font-size: 36px; }
+
+/* ── REASONS TO JOIN ── */
+.reasons-section { padding: 60px 4%; }
+
+.reasons-title { font-size: 26px; font-weight: 700; margin-bottom: 24px; }
+
+.reasons-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.reason-card {
+  background: linear-gradient(135deg, #2d0c6e 0%, #1b0a45 100%);
+  border-radius: 8px;
+  padding: 28px 24px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.reason-card::before {
+  content: '';
+  position: absolute;
+  bottom: -20px; right: -20px;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+
+.reason-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.reason-card p {
+  font-size: 13px;
+  color: #ccc;
+  line-height: 1.6;
+}
+
+.reason-icon {
+  position: absolute;
+  bottom: 16px; right: 16px;
+  font-size: 40px;
+  opacity: 0.9;
+}
+
+/* ── FAQ ── */
+.faq-section { padding: 20px 4% 60px; }
+.faq-title { font-size: 26px; font-weight: 700; margin-bottom: 20px; }
+
+.faq-item {
+  background: #2D2D2D;
+  margin-bottom: 2px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.faq-item:hover { background: #3a3a3a; }
+
+.faq-q {
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 400;
+  user-select: none;
+}
+
+.faq-q span { font-size: 28px; transition: transform 0.2s; color: #ddd; flex-shrink: 0; margin-left: 12px; }
+.faq-item.open .faq-q span { transform: rotate(45deg); }
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  font-size: 15px;
+  color: #ddd;
+  line-height: 1.7;
+}
+
+.faq-item.open .faq-a { max-height: 200px; }
+.faq-a-inner { padding: 8px 20px 20px; }
+
+.faq-cta { text-align: center; padding: 40px 20px; }
+.faq-cta p { font-size: 17px; margin-bottom: 20px; color: #e5e5e5; }
+
+.faq-email-form {
+  display: flex;
+  gap: 0;
+  max-width: 540px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.faq-email-form input {
+  width: 320px;
+  height: 52px;
+  padding: 0 18px;
+  font-size: 14px;
+  background: rgba(22,22,22,0.7);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-right: none;
+  color: white;
+  outline: none;
+  font-family: inherit;
+}
+
+.faq-email-form input::placeholder { color: #aaa; }
+
+.faq-email-form button {
+  height: 52px;
+  padding: 0 24px;
+  background: var(--red);
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
+  transition: background 0.2s;
+}
+
+.faq-email-form button:hover { background: var(--red-hover); }
+
+/* ── FOOTER ── */
+footer {
+  padding: 48px 4% 32px;
+  border-top: 1px solid #333;
+}
+
+.footer-top { margin-bottom: 24px; }
+.footer-top a { color: #aaa; font-size: 13px; text-decoration: none; }
+.footer-top a:hover { text-decoration: underline; }
+
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px 20px;
+  margin-bottom: 24px;
+}
+
+.footer-links a {
+  color: #757575;
+  font-size: 12px;
+  text-decoration: none;
+  display: block;
+  padding: 3px 0;
+}
+
+.footer-links a:hover { text-decoration: underline; color: #aaa; }
+
+.footer-lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #555;
+  padding: 6px 14px;
+  color: #aaa;
+  font-size: 13px;
+  cursor: pointer;
+  background: transparent;
+  margin-bottom: 16px;
+}
+
+.footer-bottom { color: #757575; font-size: 12px; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #141414; }
+::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+
+/* ── DIVIDER ── */
+.section-divider {
+  border: none;
+  border-top: 1px solid #2a2a2a;
+  margin: 0 4%;
+}
+
+/* Slider arrows */
+.slider-arrow {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  background: rgba(20,20,20,0.7);
+  border: none;
+  color: white;
+  font-size: 24px;
+  width: 44px; height: 80px;
+  cursor: pointer;
+  z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.card-row-wrap:hover .slider-arrow { opacity: 1; }
+.slider-arrow:hover { background: rgba(20,20,20,0.95); }
+.slider-arrow.left { left: 0; }
+.slider-arrow.right { right: 0; }
+
+/* =============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================= */
+
+/* Tablet (max 1024px) */
+@media (max-width: 1024px) {
+  .nav-links { display: none; }
+  .reasons-grid { grid-template-columns: repeat(2, 1fr); }
+  .card-row { grid-template-columns: repeat(4, 1fr); }
+  .top10-row { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Mobile (max 768px) */
+@media (max-width: 768px) {
+
+  /* ── NAV ── */
+  :root { --nav-height: 54px; }
+
+  nav { padding: 0 16px; }
+
+  .logo { font-size: 28px; letter-spacing: 2px; }
+
+  .nav-links { display: none; }
+
+  .nav-search { font-size: 16px; }
+  .nav-bell { font-size: 16px; }
+
+  .nav-avatar { width: 28px; height: 28px; font-size: 12px; }
+
+  /* ── HERO ── */
+  .hero { min-height: 100svh; }
+
+  .hero-bg-mosaic {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    transform: perspective(600px) rotateX(5deg) scale(1.1);
+    opacity: 0.45;
+  }
+
+  .hero-content { padding: 0 16px; max-width: 100%; }
+
+  .hero-content h1 {
+    font-size: clamp(36px, 10vw, 54px);
+    margin-bottom: 12px;
+  }
+
+  .hero-content p {
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+
+  /* Stack email form vertically on mobile */
+  .hero-email-form {
+    flex-direction: column;
+    gap: 10px;
+    max-width: 100%;
+  }
+
+  .hero-email-form input {
+    height: 50px;
+    border-right: 1.5px solid rgba(255,255,255,0.35);
+    font-size: 14px;
+    border-radius: 2px;
+  }
+
+  .hero-email-form button {
+    height: 50px;
+    font-size: 16px;
+    justify-content: center;
+    border-radius: 2px;
+  }
+
+  /* ── SECTIONS ── */
+  .section { padding: 24px 16px 12px; }
+
+  .section-title { font-size: 18px; margin-bottom: 12px; }
+
+  .section-divider { margin: 0 16px; }
+
+  /* ── CARD ROWS — horizontal scroll like real Netflix ── */
+  .card-row-wrap { overflow: hidden; }
+
+  .card-row {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+    /* hide scrollbar */
+    scrollbar-width: none;
+  }
+  .card-row::-webkit-scrollbar { display: none; }
+
+  .movie-card {
+    flex: 0 0 38vw;
+    max-width: 160px;
+    scroll-snap-align: start;
+    /* disable hover scale on touch */
+    transition: none;
+  }
+
+  .movie-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Show card info always on mobile (no hover) */
+  .card-hover-info { opacity: 1; }
+  .card-play-btn { opacity: 1; }
+
+  /* hide slider arrows on mobile — using native scroll */
+  .slider-arrow { display: none; }
+
+  /* ── TOP 10 ROW — horizontal scroll ── */
+  .top10-row {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+    padding-bottom: 8px;
+  }
+  .top10-row::-webkit-scrollbar { display: none; }
+
+  .top10-card {
+    flex: 0 0 44vw;
+    max-width: 180px;
+    scroll-snap-align: start;
+  }
+
+  .top10-card:hover { transform: none; }
+
+  .top10-num {
+    font-size: clamp(60px, 14vw, 100px);
+    min-width: 48px;
+    margin-right: -14px;
+  }
+
+  /* ── REASONS ── */
+  .reasons-section { padding: 32px 16px; }
+
+  .reasons-title { font-size: 20px; margin-bottom: 16px; }
+
+  .reasons-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .reason-card {
+    padding: 20px 18px 24px;
+  }
+
+  .reason-card h3 { font-size: 16px; }
+  .reason-card p { font-size: 13px; }
+  .reason-icon { font-size: 32px; }
+
+  /* ── FAQ ── */
+  .faq-section { padding: 16px 16px 40px; }
+
+  .faq-title { font-size: 20px; }
+
+  .faq-q { font-size: 14px; padding: 16px; }
+  .faq-q span { font-size: 24px; }
+  .faq-a { font-size: 13px; }
+  .faq-a-inner { padding: 6px 16px 16px; }
+
+  .faq-cta { padding: 28px 0; }
+  .faq-cta p { font-size: 15px; }
+
+  /* Stack FAQ form too */
+  .faq-email-form {
+    flex-direction: column;
+    gap: 10px;
+    max-width: 100%;
+  }
+
+  .faq-email-form input {
+    width: 100%;
+    height: 50px;
+    border-right: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 2px;
+  }
+
+  .faq-email-form button {
+    height: 50px;
+    justify-content: center;
+    border-radius: 2px;
+  }
+
+  /* ── FOOTER ── */
+  footer { padding: 32px 16px 24px; }
+
+  .footer-links {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 16px;
+  }
+
+  .footer-links a { font-size: 12px; }
+}
+
+/* Small phones (max 480px) */
+@media (max-width: 480px) {
+
+  .hero-content h1 { font-size: clamp(30px, 9vw, 44px); }
+
+  .movie-card { flex: 0 0 44vw; }
+
+  .top10-card { flex: 0 0 52vw; }
+
+  .top10-num {
+    font-size: 58px;
+    min-width: 40px;
+    margin-right: -12px;
+  }
+
+  .reasons-grid { grid-template-columns: 1fr; }
+
+  .footer-links { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-left">
+    <a class="logo" href="#">NET<em>FLIX</em></a>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">TV Shows</a></li>
+      <li><a href="#">Movies</a></li>
+      <li><a href="#">New &amp; Popular</a></li>
+      <li><a href="#">My List</a></li>
+      <li><a href="#">Browse by Languages</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <button class="nav-search">🔍</button>
+    <button class="nav-bell">🔔</button>
+    <div class="nav-avatar">RV</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-mosaic" id="mosaicGrid"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-arc"></div>
+  <div class="hero-content">
+    <h1>Unlimited <span>Movies,</span><br>TV Shows &amp; More</h1>
+    <p>Starts at ₹149. Cancel anytime.</p>
+    <p style="font-size:15px; margin-bottom:20px; color:#ccc;">Ready to watch? Enter your email to create or restart your membership.</p>
+    <div class="hero-email-form">
+      <input type="email" placeholder="Email Address" />
+      <button>
+        Get Started
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- TRENDING NOW (Top 10) -->
+<section class="section">
+  <div class="section-title">Trending Now</div>
+  <div class="top10-row" id="top10Row"></div>
+</section>
+
+<hr class="section-divider">
+
+<!-- MORE REASONS -->
+<section class="reasons-section">
+  <div class="reasons-title">More reasons to join</div>
+  <div class="reasons-grid">
+    <div class="reason-card">
+      <h3>Enjoy on<br>your TV</h3>
+      <p>Watch on Smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players and more.</p>
+      <div class="reason-icon">📺</div>
+    </div>
+    <div class="reason-card">
+      <h3>Download your shows<br>to watch offline</h3>
+      <p>Save your favourites easily and always have something to watch.</p>
+      <div class="reason-icon">📥</div>
+    </div>
+    <div class="reason-card">
+      <h3>Watch<br>everywhere</h3>
+      <p>Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV.</p>
+      <div class="reason-icon">🌐</div>
+    </div>
+    <div class="reason-card">
+      <h3>Create profiles<br>for kids</h3>
+      <p>Send kids on adventures with their favourite characters in a space made just for them — free with your membership.</p>
+      <div class="reason-icon">👶</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- POPULAR ON NETFLIX -->
+<section class="section">
+  <div class="section-title">Popular on NetFlix</div>
+  <div class="card-row-wrap">
+    <button class="slider-arrow left">&#8249;</button>
+    <div class="card-row" id="popularRow"></div>
+    <button class="slider-arrow right">&#8250;</button>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CONTINUE WATCHING -->
+<section class="section">
+  <div class="section-title">Continue Watching for You</div>
+  <div class="card-row-wrap">
+    <button class="slider-arrow left">&#8249;</button>
+    <div class="card-row" id="continueRow"></div>
+    <button class="slider-arrow right">&#8250;</button>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="faq-title">Frequently Asked Questions</div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">What is NetFlix? <span>+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">NetFlix is a streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries and more — on thousands of internet-connected devices. You can watch as much as you want, whenever you want.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">How much does NetFlix cost? <span>+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Watch NetFlix on your smartphone, tablet, Smart TV, laptop, or streaming device, all for one fixed monthly fee. Plans range from ₹149 to ₹649 a month. No extra costs, no contracts.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Where can I watch? <span>+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Watch anywhere, anytime. Sign in with your NetFlix account to watch instantly on the web at Netflix.com from your personal computer or on any internet-connected device that offers the NetFlix app.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">How do I cancel? <span>+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">NetFlix is flexible. There are no pesky contracts and no commitments. You can easily cancel your account online in two clicks. There are no cancellation fees — start or stop your account anytime.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">What can I watch on NetFlix? <span>+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">NetFlix has an extensive library of feature films, documentaries, TV shows, anime, award-winning NetFlix originals, and more. Watch as much as you want, anytime you want.</div></div>
+  </div>
+
+  <div class="faq-cta">
+    <p>Ready to watch? Enter your email to create or restart your membership.</p>
+    <div class="faq-email-form">
+      <input type="email" placeholder="Email Address" />
+      <button>Get Started <span>›</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <a href="#">Questions? Contact us</a>
+  </div>
+  <div class="footer-links">
+    <a href="#">FAQ</a>
+    <a href="#">Help Centre</a>
+    <a href="#">Account</a>
+    <a href="#">Media Centre</a>
+    <a href="#">Investor Relations</a>
+    <a href="#">Jobs</a>
+    <a href="#">Ways to Watch</a>
+    <a href="#">Terms of Use</a>
+    <a href="#">Privacy</a>
+    <a href="#">Cookie Preferences</a>
+    <a href="#">Corporate Information</a>
+    <a href="#">Contact Us</a>
+    <a href="#">Speed Test</a>
+    <a href="#">Legal Notices</a>
+    <a href="#">Only on NetFlix</a>
+  </div>
+  <button class="footer-lang">🌐 English</button>
+  <div class="footer-bottom">NetFlix India</div>
+</footer>
+
+<script>
+const movies = [
+  { title: 'Maharaja',       file: 'maharaja.jpeg',     match: '98%', year: '2024', genre: 'Thriller' },
+  { title: 'Vidaamuyarchi',  file: 'vidamuyarchi.jpeg', match: '96%', year: '2025', genre: 'Action' },
+  { title: 'Meiyazhagan',    file: 'meiyazhagan.jpeg',  match: '94%', year: '2024', genre: 'Drama' },
+  { title: 'Mareesan',       file: 'mareesan.jpeg',     match: '91%', year: '2024', genre: 'Comedy' },
+  { title: 'MM',             file: 'mm.jpeg',           match: '89%', year: '2023', genre: 'Thriller' },
+  { title: 'Retro',          file: 'retro.jpeg',        match: '87%', year: '2024', genre: 'Drama' },
+  { title: 'Kaantha',        file: 'Kaantha.jpeg',      match: '85%', year: '2024', genre: 'Romance' },
+  { title: 'Jigarthanda',    file: 'Jigarthanda.jpeg',  match: '92%', year: '2023', genre: 'Crime' },
+  { title: 'Good Bad Ugly',  file: 'goodbadugly.jpeg',  match: '88%', year: '2025', genre: 'Action' },
+  { title: 'Bison',          file: 'bison.jpeg',        match: '84%', year: '2024', genre: 'Adventure' },
+];
+
+const emojiFallbacks = ['🎪','🤡','🃏','🎭','🎠','💀','🎯','🪄','🎰','🎋'];
+
+function movieCard(m, idx, showNBadge = true) {
+  return `
+    <div class="movie-card">
+      <img src="${m.file}" alt="${m.title}"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+      <div class="card-fallback" style="display:none">
+        <span>${emojiFallbacks[idx % emojiFallbacks.length]}</span>
+        ${m.title}
+      </div>
+      ${showNBadge ? `<svg class="n-badge" viewBox="0 0 24 36" fill="none"><path d="M0 0h6.5L12 18.5 17.5 0H24v36h-6V12.5L12 31 6 12.5V36H0V0z" fill="#E50914"/></svg>` : ''}
+      <div class="card-play-btn">▶</div>
+      <div class="card-hover-info">
+        <div class="card-title">${m.title}</div>
+        <div class="card-meta"><span class="match">${m.match} Match</span> ${m.year} · ${m.genre}</div>
+      </div>
+    </div>`;
+}
+
+// Top 10
+const top10 = document.getElementById('top10Row');
+movies.slice(0, 10).forEach((m, i) => {
+  top10.innerHTML += `
+    <div class="top10-card">
+      <div class="top10-num">${i + 1}</div>
+      <div class="top10-poster">
+        <img src="${m.file}" alt="${m.title}"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="card-fallback" style="display:none">
+          <span>${emojiFallbacks[i]}</span>${m.title}
+        </div>
+      </div>
+    </div>`;
+});
+
+// Popular row
+const popularRow = document.getElementById('popularRow');
+[...movies].sort(() => Math.random() - 0.5).slice(0, 6).forEach((m, i) => {
+  popularRow.innerHTML += movieCard(m, i);
+});
+
+// Continue watching row
+const continueRow = document.getElementById('continueRow');
+[...movies].reverse().slice(0, 6).forEach((m, i) => {
+  continueRow.innerHTML += movieCard(m, i, false);
+});
+
+// Hero mosaic — adapts columns based on screen size
+function buildMosaic() {
+  const mosaic = document.getElementById('mosaicGrid');
+  mosaic.innerHTML = '';
+  const isMobile = window.innerWidth <= 768;
+  const cols = isMobile ? 4 : 7;
+  const rows = isMobile ? 4 : 3;
+  const total = cols * rows;
+
+  const shuffled = [...movies, ...movies, ...movies, ...movies]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, total);
+
+  shuffled.forEach((m, i) => {
+    mosaic.innerHTML += `
+      <div class="mosaic-cell">
+        <img src="${m.file}" alt="${m.title}"
+             onerror="this.style.display='none'; this.parentElement.classList.add('placeholder'); this.parentElement.innerHTML='${emojiFallbacks[i % 10]}'">
+      </div>`;
+  });
+}
+
+buildMosaic();
+window.addEventListener('resize', buildMosaic);
+
+// Navbar scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// FAQ toggle
+function toggleFaq(el) {
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>
